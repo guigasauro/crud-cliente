@@ -126,9 +126,8 @@ public class ClienteDAO {
                 int idAnime = rset.getInt("idAnime");
                 int idCidade = rset.getInt("idCidade");
                 int idTimeTorcedor = rset.getInt("idTimeTorcedor");
-                boolean possuiDesconto = rset.getBoolean("possuiDesconto");
 
-                cliente = new Cliente(nome, telefone, idAnime, idCidade, idTimeTorcedor, possuiDesconto);
+                cliente = new Cliente(nome, telefone, idAnime, idCidade, idTimeTorcedor);
             }
         } catch (Exception e) {
             e.printStackTrace();

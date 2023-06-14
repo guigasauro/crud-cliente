@@ -327,7 +327,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         double desconto;
         Cliente cliente = ClienteDAO.getClienteById(idCliente);
-        if(ClienteDAO.getClienteById(idCliente).isPossuiDesconto()){
+        if(cliente.isPossuiDesconto()){
             desconto = 0.15;
         }else{
             desconto = 0;
@@ -351,10 +351,12 @@ public class Main {
                 }
             }
 
-            System.out.println("\nTotal: R$ " + ItemVendaDAO.getTotal(carrinho)); // Listar total
+            double total = ItemVendaDAO.getTotal(carrinho);
+            System.out.println("\nTotal: R$ " + total); // Listar total
             if (desconto > 0) {
                 System.out.println("Desconto: " + desconto * 100 + "%"); // Listar desconto
-                System.out.println("Total com desconto: R$ " + ItemVendaDAO.getTotal(carrinho) * (1 - desconto)); // Listar total com desconto
+                total = total * (1 - desconto);
+                System.out.println("Total com desconto: R$ " + total); // Listar total com desconto
             }
             System.out.println("Método de Pagamento: " + idFormaPagamento); // Listar formas de pagamento
 
@@ -377,7 +379,7 @@ public class Main {
             } else if (opcao.equals("1")) {
                 LocalDate dataAtual = LocalDate.now();
                 Date dataVenda = Date.valueOf(dataAtual);
-                Venda venda = new Venda(idCliente , idVendedor, idFormaPagamento, dataVenda, ItemVendaDAO.getTotal(carrinho), desconto, true);
+                Venda venda = new Venda(idCliente , idVendedor, idFormaPagamento, dataVenda, total, desconto, true);
                 int idVenda = VendaDAO.save(venda);
                 for (int i = 0; i < carrinho.size(); i++) {
                     ItemVendaDAO.save(carrinho.get(i), idVenda);

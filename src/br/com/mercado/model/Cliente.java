@@ -27,15 +27,6 @@ public class Cliente {
         }
     }
 
-    public Cliente(String nome, int telefone, int idAnime, int idCidade, int idTimeTorcedor, boolean possuiDesconto){
-        this.nome = nome;
-        this.telefone = telefone;
-        this.idAnime = idAnime;
-        this.idCidade = idCidade;
-        this.idTimeTorcedor = idTimeTorcedor;
-        this.possuiDesconto = possuiDesconto;
-    }
-
     public int getIdCliente() {
         return idCliente;
     }

@@ -18,9 +18,6 @@ public class ClienteView {
         this.nomeCidade = nomeCidade;
         this.nomeTimeTorcedor = nomeTimeTorcedor;
     }
-    public ClienteView(){
-
-    }
 
     public int getIdCliente() {
         return idCliente;
@@ -49,6 +46,8 @@ public class ClienteView {
     public String getNomeTimeTorcedor() {
         return nomeTimeTorcedor;
     }
+
+    
 
 }
 
