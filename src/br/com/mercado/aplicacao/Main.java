@@ -22,12 +22,13 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("\n### Menu Principal ###\n");
+            System.out.println("### Menu Principal ###\n");
             System.out.println("[1] Cliente");
             System.out.println("[2] Funcionário");
             System.out.println("[0] Sair");
             System.out.print("\nOpção: ");
             String opcao = scanner.nextLine();
+            System.out.println();
 
             if (opcao.equals("0")) {
                 break;
@@ -45,13 +46,14 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("\n### Menu Cliente ###\n");
+            System.out.println("### Menu Cliente ###\n");
             System.out.println("[1] Pesquisar Produto");
             System.out.println("[2] Login");
             System.out.println("[3] Cadastro");
             System.out.println("[0] Voltar");
             System.out.print("\nOpção: ");
             String opcao = scanner.nextLine();
+            System.out.println();
 
             if (opcao.equals("0")) {
                 break;
@@ -70,7 +72,7 @@ public class Main {
         String titulo = "Produtos";
 
         while (true) {
-            System.out.println("\n### Menu de Produtos ###\n");
+            System.out.println("### Menu de Produtos ###\n");
             System.out.println("Pesquisar por:");
             System.out.println("[1] Nome");
             System.out.println("[2] Faixa de preço");
@@ -136,12 +138,12 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             while(idCliente==0){
-                idCliente = MainService.perguntaNumeroInt("Digite o seu id para efetuar o login: ");
+                idCliente = MainService.perguntaNumeroInt("ID do Cliente: ");
                 idCliente = ClienteDAO.getClientId(idCliente);
                 if (idCliente==0){
-                    System.out.print("Cliente não encontrado!, tente novamente!");
+                    System.out.print("\nCliente não encontrado, tente novamente!\n\n");
                 } else {
-                    System.out.print("Login realizado com sucesso!");
+                    System.out.print("\nCliente encontrado!\n\n");
                 }
             }
             menuDoClienteLogado();
@@ -152,7 +154,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("\n### Menu Cliente [LOGADO] ### " + "ID:" + idCliente + "\n");
+            System.out.println("### Menu Cliente [LOGADO] ###\n");
             System.out.println("[1] Dados Cadastrais"); // Falta implementar
             System.out.println("[2] Pedidos Anteriores"); // Falta implementar
             System.out.println("[3] Pesquisar Produto"); 
@@ -160,6 +162,7 @@ public class Main {
             System.out.println("[0] Logout");
             System.out.print("\nOpção: ");
             String opcao = scanner.nextLine();
+            System.out.println();
 
             if (opcao.equals("0")) {
                 break;
@@ -330,12 +333,13 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("\n### Menu Funcionário ###\n");
+            System.out.println("### Menu Funcionário ###\n");
             System.out.println("[1] Pesquisar Produto");
             System.out.println("[2] Relatórios"); // ! To implement
             System.out.println("[0] Voltar");
             System.out.print("\nOpção: ");
             String opcao = scanner.nextLine();
+            System.out.println();
 
             if (opcao.equals("0")) {
                 break;
@@ -350,7 +354,7 @@ public class Main {
         String titulo = "Produtos";
 
         while (true) {
-            System.out.println("\n### Menu de Produtos ###\n");
+            System.out.println("### Menu de Produtos ###\n");
             System.out.println("Pesquisar por:");
             System.out.println("[1] Nome");
             System.out.println("[2] Faixa de preço");

@@ -23,6 +23,7 @@ public class ProdutoViewDAO {
             System.out.println("Quantidade:   " + produto.getQuantidade());
             System.out.println("---------------------------");
         }
+        System.out.println();
     }
 
     public static List<ProdutoView> getAllProdutoView() {
