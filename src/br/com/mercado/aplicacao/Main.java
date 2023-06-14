@@ -173,6 +173,7 @@ public class Main {
 
     public static void menuDoClienteLogado() {
         Scanner scanner = new Scanner(System.in);
+        List<ItemVenda> carrinho =  new ArrayList<>();
 
         while (true) {
             System.out.println("### Menu Cliente ["+ idCliente +"] ###\n");
@@ -195,14 +196,13 @@ public class Main {
             } else if (opcao.equals("3")) {
                 menuDePesquisaDeProdutoDoCliente();
             } else if (opcao.equals("4")) {
-                carrinhoDeCompras();
+                carrinhoDeCompras(carrinho);
             }
         }
     }
 
-    public static void carrinhoDeCompras() {
+    public static void carrinhoDeCompras(List<ItemVenda> carrinho) {
         Scanner scanner = new Scanner(System.in);
-        List<ItemVenda> carrinho =  new ArrayList<>();
 
         while (true) {
             System.out.println("### Carrinho de Compras ###\n");
@@ -365,7 +365,7 @@ public class Main {
                 System.out.println("Por favor, altere o seu carrinho.");
                 System.out.println("\n[1] Alterar Carrinho");
                 scanner.nextLine();
-                carrinhoDeCompras();
+                break;
             }
             
             System.out.println("\n[1] Confirmar");
