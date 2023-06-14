@@ -80,34 +80,35 @@ public class Main {
             System.out.println("[0] Voltar");
             System.out.print("\nOpção: ");
             String opcao = scanner.nextLine();
+            System.out.println();
 
             if (opcao.equals("0")) {
                 break;
             } else if(opcao.equals("1")){
-                titulo = "Escreva o nome do produto que você deseja buscar";
-                String nome = MainService.perguntaString(titulo);
-                titulo = "Busca pelo nome " + nome.toUpperCase();
-                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForNameProdutoView(nome), titulo);
+                System.out.print("Nome do Produto: ");
+                String nome = scanner.nextLine();
+                System.out.println();
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForNameProdutoView(nome), "Produtos");
             } else if (opcao.equals("2")){
-                titulo = "Digite o valor minimo: ";
-                double min = MainService.perguntaNumeroDouble(titulo);
-                titulo = "Digite o valor maximo: ";
-                double max = MainService.perguntaNumeroDouble(titulo);
-                titulo = "Busca pelo produto com preço entre " + min + " e " + max;
-                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForPriceProdutoViewBy(min, max), titulo);
+                System.out.print("Mínimo: ");
+                double min = scanner.nextDouble();
+                System.out.print("Máximo: ");
+                double max = scanner.nextDouble();
+                System.out.println();
+                scanner.nextLine();
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForPriceProdutoViewBy(min, max), "Produtos");
             } else if (opcao.equals("3")){
-                titulo = "Escreva o nome da categoria que você deseja buscar";
-                String nome = MainService.perguntaString(titulo);
-                titulo = "Busca pela categoria " + nome.toUpperCase();
-                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForCategoryProdutoView(nome), titulo);
+                System.out.print("Categoria do Produto: ");
+                String nome = scanner.nextLine();
+                System.out.println();
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForCategoryProdutoView(nome), "Produtos");
             } else if (opcao.equals("4")){
-                titulo = "Escreva o nome da cidade que você deseja buscar";
-                String nome = MainService.perguntaString(titulo);
-                titulo = "Busca pela cidade " + nome.toUpperCase();
-                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForCityProdutoView(nome), titulo);
+                System.out.print("Cidade do Fabricante: ");
+                String nome = scanner.nextLine();
+                System.out.println();
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForCityProdutoView(nome), "Produtos");
             } else if (opcao.equals("5")){
-                titulo = "Todos os itens";
-                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getAllProdutoView(), titulo);
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getAllProdutoView(), "Produtos");
             }
         }
     }
@@ -391,8 +392,7 @@ public class Main {
                 titulo = "Busca pela quantidade igual ou acima de " + qtd;
                 ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForAmountProdutoView(qtd), titulo);
             } else if (opcao.equals("6")){
-                titulo = "Todos os itens";
-                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getAllProdutoView(), titulo);
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getAllProdutoView(), "Produtos");
             }
         }
     }

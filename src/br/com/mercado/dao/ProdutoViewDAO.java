@@ -9,15 +9,18 @@ import java.util.List;
 
 public class ProdutoViewDAO {
     public static void imprimirProdutos(List<ProdutoView> produtos, String titulo) {
+        if (produtos.size() == 0) {
+            System.out.println("Nenhum produto encontrado!");
+            return;
+        }
         System.out.println("---- "+ titulo + " ----");
         for (ProdutoView produto : produtos) {
             System.out.println("ID:           " + produto.getIdProduto());
             System.out.println("Nome:         " + produto.getNome());
             System.out.println("Preço:        " + produto.getPreco());
             System.out.println("Categoria:    " + produto.getNomeCategoria());
-            System.out.println("Fabricante:   " + produto.getNomeFabricante());
             System.out.println("Fabricado em: " + produto.getEnderecoFabricante());
-            System.out.println("Quantidade:   x" + produto.getQuantidade());
+            System.out.println("Quantidade:   " + produto.getQuantidade());
             System.out.println("---------------------------");
         }
     }
