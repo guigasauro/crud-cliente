@@ -152,7 +152,7 @@ public class ItemVendaDAO {
         PreparedStatement pstmt = null;
         ResultSet generatedKeys = null;
         int generatedId = 0;
-
+        
         try{
             conn = ConnectionFactory.createConectionToMySQL();
 
@@ -165,9 +165,28 @@ public class ItemVendaDAO {
 
             pstmt.executeUpdate();
 
+            
             generatedKeys = pstmt.getGeneratedKeys();
             if(generatedKeys.next()){
                 generatedId = generatedKeys.getInt(1);
+            }
+            
+            String updateQuery = "UPDATE produto SET qtd = ? WHERE idProduto = ?";
+            pstmt = conn.prepareStatement(updateQuery);
+                // Retrieve the current qtd value using a SELECT statement
+            String selectQuery = "SELECT qtd FROM produto WHERE idProduto = ?";
+            try (PreparedStatement selectStatement = conn.prepareStatement(selectQuery)) {
+                selectStatement.setInt(1, itemVenda.getIdProduto());
+                try (ResultSet resultSet = selectStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        int currentQtd = resultSet.getInt("qtd");
+                        int updatedQtd = currentQtd - itemVenda.getQuantidade();
+                        // Update the qtd value in the produto table
+                        pstmt.setInt(1, updatedQtd);
+                        pstmt.setInt(2, itemVenda.getIdProduto());
+                        pstmt.executeUpdate();
+                    }
+                }
             }
         } catch (SQLException e){
             e.printStackTrace();
@@ -188,7 +207,7 @@ public class ItemVendaDAO {
                 e.printStackTrace();
             }
         }
-
+        
         return generatedId;
     }
 
