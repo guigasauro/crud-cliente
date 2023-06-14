@@ -9,12 +9,18 @@ import java.util.List;
 
 public class VendedorDAO {
     public static void imprimirVendedores(List<Vendedor> vendedores, String titulo) {
+        if (vendedores.isEmpty()) {
+            System.out.println("Nenhum vendedor encontrado!\n");
+            return;
+        }
+
         System.out.println("---- " + titulo + " ----");
         for (Vendedor vendedor : vendedores) {
             System.out.println("ID:   " + vendedor.getId());
             System.out.println("Nome: " + vendedor.getNome());
             System.out.println("---------------------------");
         }
+        System.out.println();
     }
 
     public static List<Vendedor> getAllVendedor(){

@@ -108,7 +108,7 @@ public class ClienteDAO {
     }
 
     public static Cliente getClienteById(int id) {
-        String sql = "SELECT * FROM cliente WHERE id=?";
+        String sql = "SELECT * FROM cliente WHERE idCliente=?";
         Connection conn = null;
         PreparedStatement pstm = null;
         ResultSet rset = null;
@@ -128,7 +128,7 @@ public class ClienteDAO {
                 int idTimeTorcedor = rset.getInt("idTimeTorcedor");
                 boolean possuiDesconto = rset.getBoolean("possuiDesconto");
 
-                cliente = new Cliente(id, nome, telefone, idAnime, idCidade, idTimeTorcedor, possuiDesconto);
+                cliente = new Cliente(nome, telefone, idAnime, idCidade, idTimeTorcedor, possuiDesconto);
             }
         } catch (Exception e) {
             e.printStackTrace();

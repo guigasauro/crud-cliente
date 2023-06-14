@@ -18,7 +18,7 @@ public class ItemVendaDAO {
         try{
             conn = ConnectionFactory.createConectionToMySQL();
 
-            String sql = "SELECT * FROM itemvenda";
+            String sql = "SELECT * FROM itemVenda";
             pstmt = conn.prepareStatement(sql);
 
             rs = pstmt.executeQuery();
@@ -64,7 +64,7 @@ public class ItemVendaDAO {
         try{
             conn = ConnectionFactory.createConectionToMySQL();
 
-            String sql = "SELECT * FROM itemvenda WHERE idItemVenda = ?";
+            String sql = "SELECT * FROM itemVenda WHERE idItemVenda = ?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
 
@@ -109,7 +109,7 @@ public class ItemVendaDAO {
         try{
             conn = ConnectionFactory.createConectionToMySQL();
 
-            String sql = "SELECT * FROM itemvenda WHERE idVenda = ?";
+            String sql = "SELECT * FROM itemVenda WHERE idVenda = ?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, idVenda);
 
@@ -147,7 +147,7 @@ public class ItemVendaDAO {
     }
 
     public static int save(ItemVenda itemVenda, int idVenda){
-        String sql = "INSERT INTO itemvenda (idProduto, idVenda, quantidade, preco) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO itemVenda (idProduto, idVenda, quantidade, preco) VALUES (?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet generatedKeys = null;
@@ -200,9 +200,16 @@ public class ItemVendaDAO {
         return total;
     }
 
-    public static void ImprimeCarrinho(List<ItemVenda> carrinho){
+    public static void ImprimeCarrinho(List<ItemVenda> carrinho, String titulo){
+        if (carrinho.isEmpty()) {
+            System.out.println("Carrinho vazio!\n");
+            return;
+        }
+        
+        System.out.println("---- " + titulo + " ----");
         for (ItemVenda produto : carrinho) {
             System.out.println("ID: " + produto.getIdProduto() + " - " + ProdutoViewDAO.getForIdProdutoView(produto.getIdProduto()).getNome() + " - " + produto.getQuantidade() + " - " + produto.getPreco());
         }
+        System.out.println();
     }
 }

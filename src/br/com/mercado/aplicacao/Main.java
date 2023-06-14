@@ -205,60 +205,84 @@ public class Main {
         List<ItemVenda> carrinho =  new ArrayList<>();
 
         while (true) {
-            System.out.println("\n### Carrinho de Compras ###\n");
+            System.out.println("### Carrinho de Compras ###\n");
             System.out.println("[1] Adicionar Produto");
             System.out.println("[2] Listar Produtos");
             System.out.println("[3] Remover Produto");
-            System.out.println("[4] Alterar Quantidade");
+            System.out.println("[4] Alterar Produto");
             System.out.println("[5] Finalizar Compra"); // Tem que ter pelo menos um produto
             System.out.println("[0] Voltar");
             System.out.print("\nOpção: ");
             String opcao = scanner.nextLine();
-
+            System.out.println();
+            
             if (opcao.equals("0")) {
                 break;
             } else if (opcao.equals("1")) {
-
                 ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getAllProdutoView(), "Lista de produtos");
-                int produto = MainService.perguntaNumeroInt("Digite o código do produto a ser adicionado: ");
-                int quantidade = MainService.perguntaNumeroInt("Digite a quantidade: ");
+                System.out.print("Adicionar Produto de ID: ");
+                int produto = scanner.nextInt();
+                System.out.print("Quantidade: ");
+                int quantidade = scanner.nextInt();
+                scanner.nextLine();
+                
                 ItemVenda itemCarrinho = new ItemVenda(produto, quantidade, ProdutoViewDAO.getForIdProdutoView(produto).getPreco());
+                System.out.println("\nProduto adicionado ao carrinho!\n");
                 carrinho.add(itemCarrinho);
 
             } else if (opcao.equals("2")) {
 
-                System.out.println("Produtos no carrinho:");
-                ItemVendaDAO.ImprimeCarrinho(carrinho);
+                ItemVendaDAO.ImprimeCarrinho(carrinho, "Carrinho de Compras");
 
             } else if (opcao.equals("3")) {
 
-                System.out.println("Qual produto deseja remover?");
-                ItemVendaDAO.ImprimeCarrinho(carrinho);
-                int produto = MainService.perguntaNumeroInt("Digite o código do produto a ser removido: ");
+                System.out.print("Remover Produto de ID: ");
+                int produto = scanner.nextInt();
+                scanner.nextLine();
+
+                int encontrado = 0;
                 for(int i = 0; i < carrinho.size(); i++){
                     if(carrinho.get(i).getIdProduto() == produto){
                         carrinho.remove(i);
+                        encontrado = 1;
+                        break;
                     }
+                }
+                if(encontrado == 1){
+                    System.out.println("\nProduto removido do carrinho!\n");
+                } else{
+                    System.out.println("\nProduto não encontrado no carrinho!\n");
                 }
 
             } else if (opcao.equals("4")) {
 
-                ItemVendaDAO.ImprimeCarrinho(carrinho);
+                ItemVendaDAO.ImprimeCarrinho(carrinho, "Carrinho de Compras");
 
-                int produto = MainService.perguntaNumeroInt("Digite o código do produto a ser alterado: ");
-                int quantidade = MainService.perguntaNumeroInt("Digite a nova quantidade: ");
-
+                System.out.print("Alterar Produto de ID: ");
+                int produto = scanner.nextInt();
+                System.out.print("Nova Quantidade: ");
+                int quantidade = scanner.nextInt();
+                scanner.nextLine();
+                
+                int encontrado = 0;
                 for(int i = 0; i < carrinho.size(); i++){
                     if(carrinho.get(i).getIdProduto() == produto){
                         carrinho.get(i).setQuantidade(quantidade);
+                        encontrado = 1;
                     }
+                }
+                if(encontrado == 1){
+                    System.out.println("\nProduto alterado!\n");
+                } else{
+                    System.out.println("\nProduto não encontrado!\n");
                 }
 
             } else if (opcao.equals("5")) {
-                if(carrinho.size() > 0){
-                    finalizarCompra(carrinho);
+                if(carrinho.isEmpty()){
+                    System.out.println("Carrinho vazio! Insira pelo menos um produto ao carrinho para finalizar a compra.\n");
                 }else{
-                    System.out.println("Carrinho vazio! Insira ao menos um produto ao carrinho para finalizar a compra.");
+                    finalizarCompra(carrinho);
+                    break;
                 }
             }
         }
@@ -268,17 +292,23 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("\n### Finalizar Compra ###\n");
-            VendedorDAO.imprimirVendedores(VendedorDAO.getAllVendedor(), "Lista de vendedores");
+            System.out.println("### Finalizar Compra ###\n");
+            VendedorDAO.imprimirVendedores(VendedorDAO.getAllVendedor(), "Vendedores");
+            
+            System.out.print("ID do Vendedor: ");
+            int idVendedor = scanner.nextInt();
+            System.out.println();
 
-            int idVendedor = MainService.perguntaNumeroInt("Insira o ID do vendedor que lhe auxiliou: ");
-            System.out.println("Métodos de pagamento");
+            System.out.println("Método de Pagamento:");
             System.out.println("[1] Dinheiro");
             System.out.println("[2] Cartão"); 
             System.out.println("[3] Boleto");
             System.out.println("[4] PIX");
             System.out.println("[5] Berries");
-            int idFormaPagamento = MainService.perguntaNumeroInt("Insira o método de pagamento: ");
+            System.out.print("\nOpção: ");
+            int idFormaPagamento = scanner.nextInt();
+            scanner.nextLine();
+            
             System.out.println("\n[1] Confirmar");
             System.out.println("[0] Cancelar");
             System.out.print("\nOpção: ");
@@ -305,9 +335,9 @@ public class Main {
 
         while (true) {
             System.out.println("\n### Resumo da Compra ###\n");
-            System.out.println("Vendedor:" + VendedorDAO.getVendedorById(idVendedor).getNome());
+            System.out.println("Vendedor: " + VendedorDAO.getVendedorById(idVendedor).getNome());
 
-            System.out.println("Produtos no carrinho:");
+            System.out.println("\nCarrinho de Produtos:");
             for(int i = 0; i < carrinho.size(); i++){
                 System.out.println("[" + i + "] " + carrinho.get(i).getIdProduto() + " - " + ProdutoViewDAO.getForIdProdutoView(carrinho.get(i).getIdProduto()).getNome() + " - " + carrinho.get(i).getQuantidade());
             }
@@ -321,9 +351,11 @@ public class Main {
                 }
             }
 
-            System.out.println("Total: R$ " + ItemVendaDAO.getTotal(carrinho)); // Listar total
-            System.out.println("Desconto: " + desconto * 100 + "%"); // Listar desconto
-            System.out.println("Total após desconto: R$ " + ItemVendaDAO.getTotal(carrinho) * (1 - desconto)); // Listar total com desconto
+            System.out.println("\nTotal: R$ " + ItemVendaDAO.getTotal(carrinho)); // Listar total
+            if (desconto > 0) {
+                System.out.println("Desconto: " + desconto * 100 + "%"); // Listar desconto
+                System.out.println("Total com desconto: R$ " + ItemVendaDAO.getTotal(carrinho) * (1 - desconto)); // Listar total com desconto
+            }
             System.out.println("Método de Pagamento: " + idFormaPagamento); // Listar formas de pagamento
 
             if(estoqueInsuficiente){
@@ -338,6 +370,7 @@ public class Main {
             System.out.println("[0] Cancelar");
             System.out.print("\nOpção: ");
             String opcao = scanner.nextLine();
+            System.out.println();
 
             if (opcao.equals("0")) {
                 break;
@@ -345,11 +378,12 @@ public class Main {
                 LocalDate dataAtual = LocalDate.now();
                 Date dataVenda = Date.valueOf(dataAtual);
                 Venda venda = new Venda(idCliente , idVendedor, idFormaPagamento, dataVenda, ItemVendaDAO.getTotal(carrinho), desconto, true);
-                VendaDAO.save(venda);
+                int idVenda = VendaDAO.save(venda);
                 for (int i = 0; i < carrinho.size(); i++) {
-                    ItemVendaDAO.save(carrinho.get(i), venda.getId());
+                    ItemVendaDAO.save(carrinho.get(i), idVenda);
                 }
-                System.out.println("\nCompra Realizada com Sucesso!!!\n");
+                System.out.println("Compra Realizada com Sucesso!!!\n");
+                carrinho.clear();
                 break;
             }
         }
