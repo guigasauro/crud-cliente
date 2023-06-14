@@ -9,12 +9,17 @@ import java.util.List;
 
 public class TimeTorcedorDAO {
     public static void imprimirTimeTorcedor(List<TimeTorcedor> timeTorcedores) {
-        System.out.println("---- Times de Torcedores ----");
+        if (timeTorcedores.isEmpty()) {
+            System.out.println("Nenhum time encontrado!\n");
+            return;
+        }
+        System.out.println("---- Times ----");
         for (br.com.mercado.model.TimeTorcedor timeTorcedor : timeTorcedores) {
             System.out.println("ID:   " + timeTorcedor.getIdTimeTorcedor());
             System.out.println("Nome: " + timeTorcedor.getNome());
             System.out.println("---------------------------");
         }
+        System.out.println();
     }
 
     public static List<TimeTorcedor> getAllTimeTorcedor() {

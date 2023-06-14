@@ -115,38 +115,59 @@ public class Main {
         }
     }
     public static void cadastroDoCliente() {
-        while(true){
-            System.out.println("Digite os seu dados para o cadastro");
-            String nome = MainService.perguntaString("Nome: ");
-            int telefone = MainService.perguntaNumeroInt("Número de telefone: ");
-            AnimeDAO.imprimirAnimes(AnimeDAO.getAllAnime());
-            int idAnime = MainService.perguntaNumeroInt("Id do anime preferido: ");
-            CidadeDAO.imprimirCidade(CidadeDAO.getAllCidade());
-            int idCidade = MainService.perguntaNumeroInt("Id da cidade natal: ");
-            TimeTorcedorDAO.imprimirTimeTorcedor(TimeTorcedorDAO.getAllTimeTorcedor());
-            int idTimeTorcedor = MainService.perguntaNumeroInt("Id do time torcedor: ");
+        Scanner scanner = new Scanner(System.in);
 
+        while(true){
+            System.out.print("Nome: ");
+            String nome = scanner.nextLine();
+            System.out.print("Telefone: ");
+            int telefone = scanner.nextInt();
+
+            System.out.println();
+            AnimeDAO.imprimirAnimes(AnimeDAO.getAllAnime());
+            System.out.print("Anime Preferido: ");
+            int idAnime = scanner.nextInt();
+
+            System.out.println();
+            CidadeDAO.imprimirCidade(CidadeDAO.getAllCidade());
+            System.out.print("Cidade: ");
+            int idCidade = scanner.nextInt();
+            
+            System.out.println();
+            TimeTorcedorDAO.imprimirTimeTorcedor(TimeTorcedorDAO.getAllTimeTorcedor());
+            System.out.print("Time Torcedor: ");
+            int idTimeTorcedor = scanner.nextInt();
+            scanner.nextLine();
+            
             Cliente cliente = new Cliente(nome,telefone, idAnime, idCidade, idTimeTorcedor);
             idCliente = ClienteDAO.save(cliente);
 
-            System.out.println("Cadastrado com sucesso!, seu ID: " + idCliente);
-            menuDoClienteLogado();
+            if (idCliente==0){
+                System.out.print("Erro ao cadastrar, tente novamente!\n\n");
+            } else {
+                System.out.println("\nCadastrado realizado ! ID do Cliente: " + idCliente + "\n");
+                menuDoClienteLogado();
+                break;
+            }
         }
     }
 
     public static void loginDoCliente() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            while(idCliente==0){
-                idCliente = MainService.perguntaNumeroInt("ID do Cliente: ");
-                idCliente = ClienteDAO.getClientId(idCliente);
-                if (idCliente==0){
-                    System.out.print("\nCliente não encontrado, tente novamente!\n\n");
-                } else {
-                    System.out.print("\nCliente encontrado!\n\n");
-                }
+            System.out.print("ID do Cliente: ");
+            idCliente = scanner.nextInt();
+            idCliente = ClienteDAO.getClientId(idCliente);
+
+            System.out.println();
+            scanner.nextLine();
+            if (idCliente==0){
+                System.out.print("Cliente não encontrado, tente novamente!\n\n");
+            } else {
+                System.out.print("Cliente encontrado!\n\n");
+                menuDoClienteLogado();
+                break;
             }
-            menuDoClienteLogado();
         }
     }
 
@@ -154,7 +175,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("### Menu Cliente [LOGADO] ###\n");
+            System.out.println("### Menu Cliente ["+ idCliente +"] ###\n");
             System.out.println("[1] Dados Cadastrais"); // Falta implementar
             System.out.println("[2] Pedidos Anteriores"); // Falta implementar
             System.out.println("[3] Pesquisar Produto"); 
@@ -165,7 +186,12 @@ public class Main {
             System.out.println();
 
             if (opcao.equals("0")) {
+                idCliente = 0;
                 break;
+            } else if (opcao.equals("1")) {
+                ClienteViewDAO.imprimirClientes(ClienteViewDAO.getClientesById(idCliente), "Dados Cadastrais");
+            } else if (opcao.equals("2")) {
+                VendaDAO.imprimirVendas(VendaDAO.getForCliente(idCliente), "Pedidos");
             } else if (opcao.equals("3")) {
                 menuDePesquisaDeProdutoDoCliente();
             } else if (opcao.equals("4")) {

@@ -11,12 +11,18 @@ import java.util.List;
 public class AnimeDAO {
 
     public static void imprimirAnimes(List<Anime> animes) {
+        if (animes.isEmpty()) {
+            System.out.println("Nenhum anime encontrado!\n");
+            return;
+        }
+
         System.out.println("---- Animes ----");
         for (Anime anime : animes) {
             System.out.println("ID:   " + anime.getIdAnime());
             System.out.println("Nome: " + anime.getNome());
             System.out.println("----------------");
         }
+        System.out.println();
     }
 
     public static List<Anime> getAllAnime() {

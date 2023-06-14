@@ -9,12 +9,17 @@ import java.util.List;
 
 public class CidadeDAO {
     public static void imprimirCidade(List<Cidade> cidades) {
+        if (cidades.isEmpty()) {
+            System.out.println("Nenhuma cidade encontrada!\n");
+            return;
+        }
         System.out.println("---- Cidades ----");
         for (Cidade cidade : cidades) {
             System.out.println("ID:   " + cidade.getIdCidade());
             System.out.println("Nome: " + cidade.getNome());
             System.out.println("---------------------------");
         }
+        System.out.println();
     }
 
     public static List<Cidade> getAllCidade() {
@@ -28,7 +33,7 @@ public class CidadeDAO {
             conn = ConnectionFactory.createConectionToMySQL();
 
             // Preparar a consulta SQL
-            String sql = "SELECT * FROM Cidade";
+            String sql = "SELECT * FROM cidade";
             pstmt = conn.prepareStatement(sql);
 
             // Executar a consulta

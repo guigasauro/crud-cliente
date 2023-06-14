@@ -65,4 +65,56 @@ public class VendaDAO {
 
         return generatedId;
     }
+
+    public static List<Venda> getForCliente(int idCliente){
+        String sql = "SELECT * FROM venda WHERE idCliente = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<Venda> vendas = new ArrayList<>();
+
+        try{
+            conn = ConnectionFactory.createConectionToMySQL();
+
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, idCliente);
+
+            rs = pstmt.executeQuery();
+
+            while(rs.next()){
+                int id = rs.getInt("idVenda");
+                int idVendedor = rs.getInt("idVendedor");
+                int idFormaPagamento = rs.getInt("idFormaPagamento");
+                Date dataVenda = rs.getDate("dataVenda");
+                double valorFinal = rs.getDouble("valorFinal");
+                double porcDesconto = rs.getDouble("porcDesconto");
+                boolean statusPago = rs.getBoolean("statusPago");
+
+                Venda venda = new Venda(id, idCliente, idVendedor, idFormaPagamento, dataVenda, valorFinal, porcDesconto, statusPago);
+                vendas.add(venda);
+            }
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        } finally {
+            try{
+                if(rs != null){
+                    rs.close();
+                }
+                if(pstmt != null){
+                    pstmt.close();
+                }
+                if(conn != null){
+                    conn.close();
+                }
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+
+        return vendas;
+    }
 }

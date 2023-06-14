@@ -9,6 +9,12 @@ import java.util.List;
 
 public class ClienteViewDAO {
     public static void imprimirClientes(List<ClienteView> clientes, String titulo) {
+        
+        if (clientes.isEmpty()) {
+            System.out.println("Nenhum cliente encontrado!\n");
+            return;
+        }
+
         System.out.println("---- " + titulo + " ----");
         for (ClienteView cliente : clientes) {
             System.out.println("ID:              " + cliente.getIdCliente());
@@ -19,6 +25,7 @@ public class ClienteViewDAO {
             System.out.println("Time torcedor:   " + cliente.getNomeTimeTorcedor());
             System.out.println("---------------------------");
         }
+        System.out.println();
     }
 
     public static List<ClienteView> getAllClienteView() {
@@ -32,7 +39,7 @@ public class ClienteViewDAO {
             conn = ConnectionFactory.createConectionToMySQL();
 
             // Preparar a consulta SQL
-            String sql = "SELECT * FROM ClienteView";
+            String sql = "SELECT * FROM clienteView";
             pstmt = conn.prepareStatement(sql);
 
             // Executar a consulta
@@ -85,7 +92,7 @@ public class ClienteViewDAO {
             conn = ConnectionFactory.createConectionToMySQL();
 
             // Preparar a consulta SQL
-            String sql = "SELECT * FROM ClienteView WHERE idCliente = ?";
+            String sql = "SELECT * FROM clienteView WHERE idCliente = ?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
 

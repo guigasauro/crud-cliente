@@ -9,8 +9,8 @@ import java.util.List;
 
 public class ProdutoViewDAO {
     public static void imprimirProdutos(List<ProdutoView> produtos, String titulo) {
-        if (produtos.size() == 0) {
-            System.out.println("Nenhum produto encontrado!");
+        if (produtos.isEmpty()) {
+            System.out.println("Nenhum produto encontrado!\n");
             return;
         }
         System.out.println("---- "+ titulo + " ----");
