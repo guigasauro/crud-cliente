@@ -365,7 +365,7 @@ public class ProdutoViewDAO {
             conn = ConnectionFactory.createConectionToMySQL();
 
             // Preparar a consulta SQL com a cláusula WHERE para filtrar pelo nome
-            String sql = "SELECT * FROM produtoView WHERE quantidade >= ?";
+            String sql = "SELECT * FROM produtoView WHERE quantidade <= ?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, num);
 

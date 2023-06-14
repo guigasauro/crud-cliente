@@ -389,7 +389,7 @@ public class Main {
                 System.out.println();
                 ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForCityProdutoView(nome), titulo);
             } else if (opcao.equals("5")){
-                System.out.print("Quantidade Minima: ");
+                System.out.print("Quantidade Máxima: ");
                 int quantidade = scanner.nextInt();
                 System.out.println();
                 scanner.nextLine();
