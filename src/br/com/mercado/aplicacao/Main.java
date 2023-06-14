@@ -1,6 +1,11 @@
 package br.com.mercado.aplicacao;
-import br.com.mercado.dao.ClienteDAO;
-import br.com.mercado.model.Cliente;
+
+import br.com.mercado.dao.*;
+import br.com.mercado.model.*;
+import br.com.mercado.service.MainService;
+
+import java.sql.Date;
+import java.time.LocalDate;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -8,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
+    static int idCliente = 0;
     public static void main(String[] args) {
         menuPrincipal();
     }
@@ -34,52 +40,7 @@ public class Main {
 
         scanner.close();
     }
-
-    public static void menuFuncionario() {
-        Scanner scanner = new Scanner(System.in);
-
-        while (true) {
-            System.out.println("\n### Menu Funcionário ###\n");
-            System.out.println("[1] Pesquisar Produto");
-            System.out.println("[2] Relatórios");
-            System.out.println("[0] Voltar");
-            System.out.print("\nOpção: ");
-            String opcao = scanner.nextLine();
-
-            if (opcao.equals("0")) {
-                break;
-            } else if (opcao.equals("1")) {
-                menuDePesquisaDeProdutoDoFuncionario();
-            }
-        }
-
-        // scanner.close();
-    }
-
-    public static void menuDePesquisaDeProdutoDoFuncionario() {
-        Scanner scanner = new Scanner(System.in);
-
-        while (true) {
-            System.out.println("\n### Menu de Produtos ###\n");
-            System.out.println("Pesquisar por:");
-            System.out.println("[1] Nome");
-            System.out.println("[2] Faixa de preço");
-            System.out.println("[3] Categoria");
-            System.out.println("[4] Cidade");
-            System.out.println("[5] Estoque");
-            System.out.println("[6] Todos");
-            System.out.println("[0] Voltar");
-            System.out.print("\nOpção: ");
-            String opcao = scanner.nextLine();
-
-            if (opcao.equals("0")) {
-                break;
-            }
-        }
-
-        // scanner.close();
-    }
-
+    
     public static void menuCliente() {
         Scanner scanner = new Scanner(System.in);
 
@@ -98,14 +59,15 @@ public class Main {
                 menuDePesquisaDeProdutoDoCliente();
             } else if (opcao.equals("2")) {
                 loginDoCliente();
+            } else if (opcao.equals("3")) {
+                cadastroDoCliente();
             }
         }
-
-        // scanner.close();
     }
 
     public static void menuDePesquisaDeProdutoDoCliente() {
         Scanner scanner = new Scanner(System.in);
+        String titulo;
 
         while (true) {
             System.out.println("\n### Menu de Produtos ###\n");
@@ -113,7 +75,7 @@ public class Main {
             System.out.println("[1] Nome");
             System.out.println("[2] Faixa de preço");
             System.out.println("[3] Categoria");
-            System.out.println("[4] Cidade");
+            System.out.println("[4] Cidade do Fabricante");
             System.out.println("[5] Todos");
             System.out.println("[0] Voltar");
             System.out.print("\nOpção: ");
@@ -121,59 +83,96 @@ public class Main {
 
             if (opcao.equals("0")) {
                 break;
+            } else if(opcao.equals("1")){
+                titulo = "Escreva o nome do produto que você deseja buscar";
+                String nome = MainService.perguntaString(titulo);
+                titulo = "Busca pelo nome " + nome.toUpperCase();
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForNameProdutoView(nome), titulo);
+            } else if (opcao.equals("2")){
+                titulo = "Digite o valor minimo: ";
+                double min = MainService.perguntaNumeroDouble(titulo);
+                titulo = "Digite o valor maximo: ";
+                double max = MainService.perguntaNumeroDouble(titulo);
+                titulo = "Busca pelo produto com preço entre " + min + " e " + max;
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForPriceProdutoViewBy(min, max), titulo);
+            } else if (opcao.equals("3")){
+                titulo = "Escreva o nome da categoria que você deseja buscar";
+                String nome = MainService.perguntaString(titulo);
+                titulo = "Busca pela categoria " + nome.toUpperCase();
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForCategoryProdutoView(nome), titulo);
+            } else if (opcao.equals("4")){
+                titulo = "Escreva o nome da cidade que você deseja buscar";
+                String nome = MainService.perguntaString(titulo);
+                titulo = "Busca pela cidade " + nome.toUpperCase();
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForCityProdutoView(nome), titulo);
+            } else if (opcao.equals("5")){
+                titulo = "Todos os itens";
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getAllProdutoView(), titulo);
             }
         }
+    }
+    public static void cadastroDoCliente() {
+        while(true){
+            System.out.println("Digite os seu dados para o cadastro");
+            String nome = MainService.perguntaString("Nome: ");
+            int telefone = MainService.perguntaNumeroInt("Número de telefone: ");
+            AnimeDAO.imprimirAnimes(AnimeDAO.getAllAnime());
+            int idAnime = MainService.perguntaNumeroInt("Id do anime preferido: ");
+            CidadeDAO.imprimirCidade(CidadeDAO.getAllCidade());
+            int idCidade = MainService.perguntaNumeroInt("Id da cidade natal: ");
+            TimeTorcedorDAO.imprimirTimeTorcedor(TimeTorcedorDAO.getAllTimeTorcedor());
+            int idTimeTorcedor = MainService.perguntaNumeroInt("Id do time torcedor: ");
 
-        // scanner.close();
+            Cliente cliente = new Cliente(nome,telefone, idAnime, idCidade, idTimeTorcedor);
+            idCliente = ClienteDAO.save(cliente);
+
+            System.out.println("Cadastrado com sucesso!, seu ID: " + idCliente);
+            menuDoClienteLogado();
+        }
     }
 
     public static void loginDoCliente() {
         Scanner scanner = new Scanner(System.in);
-
         while (true) {
-            System.out.println("\n### Login ###\n");
-            System.out.print("CPF: ");
-            String cpf = scanner.nextLine();
-
-            if (!cpf.isEmpty()) {
-                menuDoClienteLogado();
-                break;
+            while(idCliente==0){
+                idCliente = MainService.perguntaNumeroInt("Digite o seu id para efetuar o login: ");
+                idCliente = ClienteDAO.getClientId(idCliente);
+                if (idCliente==0){
+                    System.out.print("Cliente não encontrado!, tente novamente!");
+                } else {
+                    System.out.print("Login realizado com sucesso!");
+                }
             }
+            menuDoClienteLogado();
         }
-
-        // scanner.close();
     }
 
     public static void menuDoClienteLogado() {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("\n### Menu Cliente [LOGADO] ###\n");
-            System.out.println("[1] Dados Cadastrais");
-            System.out.println("[2] Pedidos Anteriores");
-            System.out.println("[3] Pesquisar Produto");
-            System.out.println("[4] Carrinho de Compras");
-            System.out.println("[5] Finalizar Compra");
+            System.out.println("\n### Menu Cliente [LOGADO] ### " + "ID:" + idCliente + "\n");
+            System.out.println("[1] Dados Cadastrais"); // Falta implementar
+            System.out.println("[2] Pedidos Anteriores"); // Falta implementar
+            System.out.println("[3] Pesquisar Produto"); 
+            System.out.println("[4] Carrinho de Compras"); 
             System.out.println("[0] Logout");
             System.out.print("\nOpção: ");
             String opcao = scanner.nextLine();
 
             if (opcao.equals("0")) {
                 break;
-            } else if (opcao.equals("1")) {
+            } else if (opcao.equals("3")) {
                 menuDePesquisaDeProdutoDoCliente();
             } else if (opcao.equals("4")) {
                 carrinhoDeCompras();
-            } else if (opcao.equals("5")) {
-                finalizarCompra();
             }
         }
-
-        // scanner.close();
     }
 
     public static void carrinhoDeCompras() {
         Scanner scanner = new Scanner(System.in);
+        List<ItemVenda> carrinho =  new ArrayList<>();
 
         while (true) {
             System.out.println("\n### Carrinho de Compras ###\n");
@@ -188,27 +187,68 @@ public class Main {
 
             if (opcao.equals("0")) {
                 break;
+            } else if (opcao.equals("1")) {
+
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getAllProdutoView(), "Lista de produtos");
+                int produto = MainService.perguntaNumeroInt("Digite o código do produto a ser adicionado: ");
+                int quantidade = MainService.perguntaNumeroInt("Digite a quantidade: ");
+                ItemVenda itemCarrinho = new ItemVenda(produto, quantidade, ProdutoViewDAO.getForIdProdutoView(produto).getPreco());
+                carrinho.add(itemCarrinho);
+
+            } else if (opcao.equals("2")) {
+
+                System.out.println("Produtos no carrinho:");
+                ItemVendaDAO.ImprimeCarrinho(carrinho);
+
+            } else if (opcao.equals("3")) {
+
+                System.out.println("Qual produto deseja remover?");
+                ItemVendaDAO.ImprimeCarrinho(carrinho);
+                int produto = MainService.perguntaNumeroInt("Digite o código do produto a ser removido: ");
+                for(int i = 0; i < carrinho.size(); i++){
+                    if(carrinho.get(i).getIdProduto() == produto){
+                        carrinho.remove(i);
+                    }
+                }
+
+            } else if (opcao.equals("4")) {
+
+                ItemVendaDAO.ImprimeCarrinho(carrinho);
+
+                int produto = MainService.perguntaNumeroInt("Digite o código do produto a ser alterado: ");
+                int quantidade = MainService.perguntaNumeroInt("Digite a nova quantidade: ");
+
+                for(int i = 0; i < carrinho.size(); i++){
+                    if(carrinho.get(i).getIdProduto() == produto){
+                        carrinho.get(i).setQuantidade(quantidade);
+                    }
+                }
+
             } else if (opcao.equals("5")) {
-                finalizarCompra();
+                if(carrinho.size() > 0){
+                    finalizarCompra(carrinho);
+                }else{
+                    System.out.println("Carrinho vazio! Insira ao menos um produto ao carrinho para finalizar a compra.");
+                }
             }
         }
-
-        // scanner.close();
     }
 
-    public static void finalizarCompra() {
+    public static void finalizarCompra(List<ItemVenda> carrinho) {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
             System.out.println("\n### Finalizar Compra ###\n");
-            System.out.println("Vendedores:");
-            // Listar vendedores
-            System.out.print("\nOpção: ");
-            String vendedor = scanner.nextLine();
-            System.out.println("\nMétodos de Pagamento:");
-            // Listar formas de pagamento
-            System.out.print("\nOpção: ");
-            String metodoDePagamento = scanner.nextLine();
+            VendedorDAO.imprimirVendedores(VendedorDAO.getAllVendedor(), "Lista de vendedores");
+
+            int idVendedor = MainService.perguntaNumeroInt("Insira o ID do vendedor que lhe auxiliou: ");
+            System.out.println("Métodos de pagamento");
+            System.out.println("[1] Dinheiro");
+            System.out.println("[2] Cartão"); 
+            System.out.println("[3] Boleto");
+            System.out.println("[4] PIX");
+            System.out.println("[5] Berries");
+            int idFormaPagamento = MainService.perguntaNumeroInt("Insira o método de pagamento: ");
             System.out.println("\n[1] Confirmar");
             System.out.println("[0] Cancelar");
             System.out.print("\nOpção: ");
@@ -217,43 +257,53 @@ public class Main {
             if (opcao.equals("0")) {
                 break;
             } else if (opcao.equals("1")) {
-                resumoDaCompra();
+                resumoDaCompra(carrinho, idVendedor, idFormaPagamento);
                 break;
             }
         }
-
-        // scanner.close();
     }
 
-    public static void resumoDaCompra() {
+    public static void resumoDaCompra(List<ItemVenda> carrinho, int idVendedor, int idFormaPagamento) {
         Scanner scanner = new Scanner(System.in);
+        double desconto;
+        Cliente cliente = ClienteDAO.getClienteById(idCliente);
+        if(ClienteDAO.getClienteById(idCliente).isPossuiDesconto()){
+            desconto = 0.15;
+        }else{
+            desconto = 0;
+        }
 
         while (true) {
             System.out.println("\n### Resumo da Compra ###\n");
-            System.out.println("Vendedor:");
+            System.out.println("Vendedor:" + VendedorDAO.getVendedorById(idVendedor).getNome());
 
-            // Listar produtos
-            System.out.println("Código:");
-            System.out.println("Produto:");
-            System.out.println("Quantidade:");
+            System.out.println("Produtos no carrinho:");
+            for(int i = 0; i < carrinho.size(); i++){
+                System.out.println("[" + i + "] " + carrinho.get(i).getIdProduto() + " - " + ProdutoViewDAO.getForIdProdutoView(carrinho.get(i).getIdProduto()).getNome() + " - " + carrinho.get(i).getQuantidade());
+            }
+            
+            boolean estoqueInsuficiente = false;
+            for(int i = 0; i < carrinho.size(); i++){
+                if(carrinho.get(i).getQuantidade() >= ProdutoViewDAO.getForIdProdutoView(carrinho.get(i).getIdProduto()).getQuantidade()){
+                    System.out.println("!!! Estoque Insuficiente do Produto" + ProdutoViewDAO.getForIdProdutoView(carrinho.get(i).getIdProduto()).getNome() + "!!!");
+                    System.out.println("Quantidade em Estoque: " + ProdutoViewDAO.getForIdProdutoView(carrinho.get(i).getIdProduto()).getQuantidade());
+                    estoqueInsuficiente = true;
+                }
+            }
 
-            // if produto estoqueInsuficiente:
-            System.out.println("!!! Estoque Insuficiente !!!");
-            System.out.println("Quantidade em Estoque: ");
+            System.out.println("Total: R$ " + ItemVendaDAO.getTotal(carrinho)); // Listar total
+            System.out.println("Desconto: " + desconto * 100 + "%"); // Listar desconto
+            System.out.println("Total após desconto: R$ " + ItemVendaDAO.getTotal(carrinho) * (1 - desconto)); // Listar total com desconto
+            System.out.println("Método de Pagamento: " + idFormaPagamento); // Listar formas de pagamento
 
-            // desconto
-            // if desconto:
-            //    System.out.println("Desconto:");
-            System.out.println("Total: "); // Listar total
-            System.out.println("Métodos de Pagamento: "); // Listar formas de pagamento
-
-            //if any estoqueInsuficiente:
-            System.out.println("\nSua Compra Tem Produtos Sem Estoque Suficiente!");
-            System.out.println("Por favor, Altere o Seu Carrinho.");
-
-            // System.out.println("\n[1] Alterar Carrinho");
-            // scanner.nextLine();
-            // else:
+            if(estoqueInsuficiente){
+                System.out.println("\nSua compra tem produtos sem estoque suficiente!");
+                System.out.println("Por favor, altere o seu carrinho.");
+                System.out.println("\n[1] Alterar Carrinho");
+                scanner.nextLine();
+                carrinhoDeCompras();
+            }
+            
             System.out.println("\n[1] Confirmar");
             System.out.println("[0] Cancelar");
             System.out.print("\nOpção: ");
@@ -262,160 +312,89 @@ public class Main {
             if (opcao.equals("0")) {
                 break;
             } else if (opcao.equals("1")) {
-                // cadastra a compra
+                LocalDate dataAtual = LocalDate.now();
+                Date dataVenda = Date.valueOf(dataAtual);
+                Venda venda = new Venda(idCliente , idVendedor, idFormaPagamento, dataVenda, ItemVendaDAO.getTotal(carrinho), desconto, true);
+                VendaDAO.save(venda);
+                for (int i = 0; i < carrinho.size(); i++) {
+                    ItemVendaDAO.save(carrinho.get(i), venda.getId());
+                }
                 System.out.println("\nCompra Realizada com Sucesso!!!\n");
                 break;
             }
         }
-
-        // scanner.close();
     }
+
+    public static void menuFuncionario() {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\n### Menu Funcionário ###\n");
+            System.out.println("[1] Pesquisar Produto");
+            System.out.println("[2] Relatórios"); // ! To implement
+            System.out.println("[0] Voltar");
+            System.out.print("\nOpção: ");
+            String opcao = scanner.nextLine();
+
+            if (opcao.equals("0")) {
+                break;
+            } else if (opcao.equals("1")) {
+                menuDePesquisaDeProdutoDoFuncionario();
+            }
+        }
+    }
+
+    public static void menuDePesquisaDeProdutoDoFuncionario() {
+        Scanner scanner = new Scanner(System.in);
+        String titulo = "";
+
+        while (true) {
+            System.out.println("\n### Menu de Produtos ###\n");
+            System.out.println("Pesquisar por:");
+            System.out.println("[1] Nome");
+            System.out.println("[2] Faixa de preço");
+            System.out.println("[3] Categoria");
+            System.out.println("[4] Cidade do Fabricante");
+            System.out.println("[5] Estoque");
+            System.out.println("[6] Todos");
+            System.out.println("[0] Voltar");
+            System.out.print("\nOpção: ");
+            String opcao = scanner.nextLine();
+
+            if (opcao.equals("0")) {
+                break;
+            } else if(opcao.equals("1")){
+                titulo = "Escreva o nome do produto que você deseja buscar";
+                String nome = MainService.perguntaString(titulo);
+                titulo = "Busca pelo nome " + nome.toUpperCase();
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForNameProdutoView(nome), titulo);
+            } else if (opcao.equals("2")){
+                titulo = "Digite o valor minimo: ";
+                double min = MainService.perguntaNumeroDouble(titulo);
+                titulo = "Digite o valor maximo: ";
+                double max = MainService.perguntaNumeroDouble(titulo);
+                titulo = "Busca pelo produto com preço entre " + min + " e " + max;
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForPriceProdutoViewBy(min, max), titulo);
+            } else if (opcao.equals("3")){
+                titulo = "Escreva o nome da categoria que você deseja buscar";
+                String nome = MainService.perguntaString(titulo);
+                titulo = "Busca pela categoria " + nome.toUpperCase();
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForCategoryProdutoView(nome), titulo);
+            } else if (opcao.equals("4")){
+                titulo = "Escreva o nome da cidade que você deseja buscar";
+                String nome = MainService.perguntaString(titulo);
+                titulo = "Busca pela cidade " + nome.toUpperCase();
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForCityProdutoView(nome), titulo);
+            } else if (opcao.equals("5")){
+                titulo = "Escreva a quantidade minima de um produto que deseja buscar: ";
+                int qtd = MainService.perguntaNumeroInt(titulo);
+                titulo = "Busca pela quantidade igual ou acima de " + qtd;
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getForAmountProdutoView(qtd), titulo);
+            } else if (opcao.equals("6")){
+                titulo = "Todos os itens";
+                ProdutoViewDAO.imprimirProdutos(ProdutoViewDAO.getAllProdutoView(), titulo);
+            }
+        }
+    }
+
 }
-
-
-//     public static void printTabela(List<Cliente> clientes) {
-//         final int ID_WIDTH = 4;
-//         final int NAME_WIDTH = 20;
-//         final int PHONE_WIDTH = 15;
-//         final int CITY_ID_WIDTH = 4;
-//         final int TIME_ID_WIDTH = 4;
-//         final int ANIME_ID_WIDTH = 4;
-
-//         if (clientes.size() == 0) {
-//             System.out.println("Nenhum cliente cadastrado.");
-//             return;
-//         }
-        
-//         String format = "| %-" + ID_WIDTH + "s | %-" + NAME_WIDTH + "s | %-" + PHONE_WIDTH + "s | %-" + CITY_ID_WIDTH + "s | %-" + TIME_ID_WIDTH + "s | %-" + ANIME_ID_WIDTH + "s |%n";
-//         System.out.format(format, "ID", "NOME", "TELEFONE", "CIDADE_ID", "TIME_ID", "ANIME_ID");
-    
-//         for (Cliente c : clientes) {
-//             System.out.format(
-//                 format,
-//                 Integer.toString(c.getId()).substring(0, Math.min(Integer.toString(c.getId()).length(), ID_WIDTH)),
-//                 c.getNome().substring(0, Math.min(c.getNome().length(), NAME_WIDTH)),
-//                 c.getTelefone().substring(0, Math.min(c.getTelefone().length(), PHONE_WIDTH)),
-//                 Integer.toString(c.getCidadeID()).substring(0, Math.min(Integer.toString(c.getCidadeID()).length(), CITY_ID_WIDTH)),
-//                 Integer.toString(c.getTimeID()).substring(0, Math.min(Integer.toString(c.getTimeID()).length(), TIME_ID_WIDTH)),
-//                 Integer.toString(c.getAnimeID()).substring(0, Math.min(Integer.toString(c.getAnimeID()).length(), ANIME_ID_WIDTH))
-//             );
-//         }
-//     }
-
-
-//     public static void listarCadastros(ClienteDAO clienteDao) {
-//         System.out.println("\n*** Listar Cadastros ***\n");
-//         List<Cliente> clientes = clienteDao.listar();
-//         printTabela(clientes);
-//     }
-
-
-//     public static void buscarCadastro(ClienteDAO clienteDao, Scanner scn) {
-//         System.out.println("\n*** Buscar Cadastro ***\n");
-        
-//         System.out.println("ID: ");
-//         int id = scn.nextInt();
-        
-//         List<Cliente> clientes = new ArrayList<>();
-//         Cliente cliente = clienteDao.buscar(id);
-
-//         if (cliente != null) {
-//             clientes.add(cliente);
-//             printTabela(clientes);
-//         } else {
-//             System.out.println("Cliente não encontrado.");
-//         }
-//     }
-
-
-//     public static void buscarCadastroPorNome(ClienteDAO clienteDao, Scanner scn){
-//         System.out.println("\n*** Buscar pelo nome ***\n");
-
-//         System.out.println("Nome: ");
-//         String nome = scn.nextLine();
-//         nome = scn.nextLine();
-
-//         List<Cliente> clientes = clienteDao.buscarPorNome(nome);
-//         printTabela(clientes);
-//     }
-
-
-//     public static void cadastrarCliente(Cliente cliente, ClienteDAO clienteDao, Scanner scn) {
-//         System.out.println("\n*** Novo Cadastro ***\n");
-
-//         System.out.println("Nome: ");
-//         String nome = scn.nextLine();
-//         nome = scn.nextLine();
-
-//         System.out.println("Telefone: ");
-//         String telefone = scn.nextLine();
-//         telefone = scn.nextLine();
-
-//         System.out.println("ID da Cidade: ");
-//         int cidadeID = scn.nextInt();
-
-//         System.out.println("ID do Time: ");
-//         int timeID = scn.nextInt();
-
-//         System.out.println("ID do Anime: ");
-//         int animeID = scn.nextInt();
-
-//         cliente.setNome(nome);
-//         cliente.setTelefone(telefone);
-//         cliente.setCidadeID(cidadeID);
-//         cliente.setTimeID(timeID);
-//         cliente.setAnimeID(animeID);
-
-//         clienteDao.cadastrar(cliente);
-
-//         System.out.println("Cliente cadastrado com sucesso!");
-//     }
-
-
-//     public static void atualizarCadastro(Cliente cliente, ClienteDAO clienteDao, Scanner scn){
-//         System.out.println("\n*** ALterar Cadastro ***\n");
-
-//         System.out.println("ID: ");
-//         int id = scn.nextInt();
-
-//         System.out.println("Nome: ");
-//         String nome = scn.nextLine();
-//         nome = scn.nextLine();
-
-//         System.out.println("Telefone: ");
-//         String telefone = scn.nextLine();
-//         telefone = scn.nextLine();
-
-//         System.out.println("ID da Cidade: ");
-//         int cidadeID = scn.nextInt();
-
-//         System.out.println("ID do Time: ");
-//         int timeID = scn.nextInt();
-
-//         System.out.println("ID do Anime: ");
-//         int animeID = scn.nextInt();
-
-//         cliente.setId(id);
-//         cliente.setNome(nome);
-//         cliente.setTelefone(telefone);
-//         cliente.setCidadeID(cidadeID);
-//         cliente.setTimeID(timeID);
-//         cliente.setAnimeID(animeID);
-
-//         clienteDao.atualizar(cliente);
-
-//         System.out.println("Cadastro atualizado.");
-//     }
-
-
-//     public static void deletarCadastro(ClienteDAO clienteDao, Scanner scn){
-//         System.out.println("\n*** Deletar Cadastro ***\n");
-        
-//         System.out.println("ID: ");
-//         int id = scn.nextInt();
-//         clienteDao.deletar(id);
-
-//         System.out.println("Cadastro deletado.");
-//     }
-
-// }

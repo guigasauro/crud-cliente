@@ -1,21 +1,47 @@
 package br.com.mercado.model;
 
 public class Cliente {
-
-    private int id;
+    private int idCliente;
     private String nome;
     private int telefone;
-    private String endereco;
-    private boolean isTorcedorFlamengo;
-    private boolean isFanOnePiece;
-    private boolean isSouza;
+    private int idAnime;
+    private int idCidade;
+    private int idTimeTorcedor;
+    private boolean possuiDesconto;
 
-    public int getId() {
-        return id;
+    public Cliente() {
+        // Construtor vazio
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Cliente(String nome, int telefone, int idAnime, int idCidade, int idTimeTorcedor) {
+        this.nome = nome;
+        this.telefone = telefone;
+        this.idAnime = idAnime;
+        this.idCidade = idCidade;
+        this.idTimeTorcedor = idTimeTorcedor;
+
+        if (idAnime == 2 || idCidade == 1 || idTimeTorcedor == 2) {
+            this.possuiDesconto = true;
+        } else {
+            this.possuiDesconto = false;
+        }
+    }
+
+    public Cliente(String nome, int telefone, int idAnime, int idCidade, int idTimeTorcedor, boolean possuiDesconto){
+        this.nome = nome;
+        this.telefone = telefone;
+        this.idAnime = idAnime;
+        this.idCidade = idCidade;
+        this.idTimeTorcedor = idTimeTorcedor;
+        this.possuiDesconto = possuiDesconto;
+    }
+
+    public int getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(int idCliente) {
+        this.idCliente = idCliente;
     }
 
     public String getNome() {
@@ -34,36 +60,36 @@ public class Cliente {
         this.telefone = telefone;
     }
 
-    public String getEndereco() {
-        return endereco;
+    public int getIdAnime() {
+        return idAnime;
     }
 
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
+    public void setIdAnime(int idAnime) {
+        this.idAnime = idAnime;
     }
 
-    public boolean getTorcedorFlamengo() {
-        return isTorcedorFlamengo;
+    public int getIdCidade() {
+        return idCidade;
     }
 
-    public void setTorcedorFlamengo(boolean torcedorFlamengo) {
-        isTorcedorFlamengo = torcedorFlamengo;
+    public void setIdCidade(int idCidade) {
+        this.idCidade = idCidade;
     }
 
-    public boolean getFanOnePiece() {
-        return isFanOnePiece;
+    public int getIdTimeTorcedor() {
+        return idTimeTorcedor;
     }
 
-    public void setFanOnePiece(boolean fanOnePiece) {
-        isFanOnePiece = fanOnePiece;
+    public void setIdTimeTorcedor(int idTimeTorcedor) {
+        this.idTimeTorcedor = idTimeTorcedor;
     }
 
-    public boolean getSouza() {
-        return isSouza;
+    public boolean isPossuiDesconto() {
+        return possuiDesconto;
     }
 
-    public void setSouza(boolean souza) {
-        isSouza = souza;
+    public void setPossuiDesconto(boolean possuiDesconto) {
+        this.possuiDesconto = possuiDesconto;
     }
-
 }
+
