@@ -9,11 +9,24 @@ import java.util.List;
 
 public class VendaDAO {
     public static void imprimirVendas(List<Venda> vendas, String titulo){
+        if (vendas.isEmpty()){
+            System.out.println("Nenhuma venda cadastrada!\n");
+            return;
+        }
+
         System.out.println("---- " + titulo + " ----");
         for(Venda venda : vendas){
-            System.out.println("[" + venda.getId() + "]" + " - " + venda.getIdCliente() + " - " + venda.getIdVendedor() + " - " + venda.getIdFormaPagamento() + " - " + venda.getDataVenda() + " - " + venda.getValorFinal() + " - " + venda.getPorcDesconto() + " - " + venda.getStatusPago());
+            System.out.println("ID: " + venda.getId());
+            System.out.println("ID Cliente: " + venda.getIdCliente());
+            System.out.println("ID Vendedor: " + venda.getIdVendedor());
+            System.out.println("ID Forma de Pagamento: " + venda.getIdFormaPagamento());
+            System.out.println("Data da Venda: " + venda.getDataVenda());
+            System.out.println("Valor Final: " + venda.getValorFinal());
+            System.out.println("Porcentagem de Desconto: " + venda.getPorcDesconto());
+            System.out.println("Status de Pagamento: " + venda.getStatusPago());
             System.out.println("---------------------------");
         }
+        System.out.println();
     }
 
     public static int save(Venda venda){

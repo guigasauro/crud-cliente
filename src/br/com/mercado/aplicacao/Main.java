@@ -191,7 +191,7 @@ public class Main {
             } else if (opcao.equals("1")) {
                 ClienteViewDAO.imprimirClientes(ClienteViewDAO.getClientesById(idCliente), "Dados Cadastrais");
             } else if (opcao.equals("2")) {
-                VendaDAO.imprimirVendas(VendaDAO.getForCliente(idCliente), "Pedidos");
+                VendaDAO.imprimirVendas(VendaDAO.getForCliente(idCliente), "Pedidos Anteriores");
             } else if (opcao.equals("3")) {
                 menuDePesquisaDeProdutoDoCliente();
             } else if (opcao.equals("4")) {
