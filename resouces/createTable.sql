@@ -192,3 +192,23 @@ FROM cliente c
 JOIN anime a ON c.idAnime = a.idAnime
 JOIN cidade cid ON c.idCidade = cid.idCidade
 JOIN timeTorcedor tf ON c.idTimeTorcedor = tf.idTimeTorcedor;
+
+DROP PROCEDURE IF EXISTS GenerateSalesReport
+
+DELIMITER //
+
+CREATE PROCEDURE GenerateSalesReport(IN p_month INT, IN p_vendorID INT)
+BEGIN
+    SELECT c.nome AS nome_cliente,
+           COUNT(DISTINCT v.idVenda) AS total_vendas,
+           SUM(iv.quantidade) AS total_produtos,
+           SUM(iv.quantidade * iv.preco) AS total_pago
+    FROM cliente c
+    INNER JOIN venda v ON c.idCliente = v.idCliente
+    INNER JOIN itemVenda iv ON v.idVenda = iv.idVenda
+    WHERE MONTH(v.dataVenda) = p_month AND v.idVendedor = p_vendorID
+    GROUP BY c.idCliente;
+END //
+
+DELIMITER ;
+

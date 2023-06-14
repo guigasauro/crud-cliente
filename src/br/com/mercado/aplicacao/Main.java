@@ -397,7 +397,7 @@ public class Main {
         while (true) {
             System.out.println("### Menu Funcionário ###\n");
             System.out.println("[1] Pesquisar Produto");
-            System.out.println("[2] Relatórios"); // ! To implement
+            System.out.println("[2] Relatório");
             System.out.println("[0] Voltar");
             System.out.print("\nOpção: ");
             String opcao = scanner.nextLine();
@@ -407,6 +407,13 @@ public class Main {
                 break;
             } else if (opcao.equals("1")) {
                 menuDePesquisaDeProdutoDoFuncionario();
+            } else if (opcao.equals("2")) {
+                System.out.print("Mês do Relatório: ");
+                int mes = scanner.nextInt();
+                System.out.print("ID do Vendedor: ");
+                int idVendedor = scanner.nextInt();
+                VendedorDAO.relatorio(mes, idVendedor);
+                scanner.nextLine(); 
             }
         }
     }

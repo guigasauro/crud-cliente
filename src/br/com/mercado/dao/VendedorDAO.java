@@ -152,4 +152,56 @@ public class VendedorDAO {
 
         return vendedor;
     }
+
+    public static void relatorio(int mes, int idVendedor) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try{
+            conn = ConnectionFactory.createConectionToMySQL();
+
+            String sql = "CALL GenerateSalesReport(?, ?);";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, mes);
+            pstmt.setInt(2, idVendedor);
+            System.out.println();
+
+            rs = pstmt.executeQuery();
+
+            if (!rs.next()) {
+                System.out.println("Nenhum relatório encontrado!\n");
+                return;
+            }
+
+            System.out.println("---- Relatório de Vendas ----");
+            do {
+                System.out.println("Cliente: " + rs.getString("nome_cliente"));
+                System.out.println("Total de Vendas: " + rs.getString("total_vendas"));
+                System.out.println("Total de Produtos: " + rs.getString("total_produtos"));
+                System.out.println("Total em Gasto: " + rs.getString("total_pago"));
+                System.out.println("---------------------------");
+            } while (rs.next());
+            System.out.println();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }finally{
+            try{
+                if(rs != null){
+                    rs.close();
+                }
+                if(pstmt != null){
+                    pstmt.close();
+                }
+                if(conn != null){
+                    conn.close();
+                }
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+    }
 }
